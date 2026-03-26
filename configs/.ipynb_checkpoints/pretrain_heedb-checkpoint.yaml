@@ -1,0 +1,53 @@
+# configs/pretrain_heedb.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+# ECG-JEPA pretraining on HEEDB  (H200 × 8)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── 데이터 ────────────────────────────────────────────────────────────────────
+data:
+  root_dir:      "/home/irteam/opendata1/h5/heedb/v4.0"
+  csv_path:      null                  # null → root_dir/heedb_table.csv 자동
+  max_nan_ratio: 0.1                   # 리드별 nan 비율 허용 상한
+  n_leads:       12                    # 12 = 전체 리드 사용
+
+# ── 모델 ──────────────────────────────────────────────────────────────────────
+model:
+  name:                ecg_jepa        # models 레지스트리 키
+  # encoder
+  encoder_embed_dim:   768
+  encoder_depth:       12
+  encoder_num_heads:   16
+  # predictor
+  predictor_embed_dim: 384
+  predictor_depth:     6
+  predictor_num_heads: 12
+  # 공통
+  drop_path_rate:      0.1
+  pos_type:            sincos
+  # ECG 구조  (c=12, p*t = 2500)
+  c:                   12              # leads
+  p:                   50              # patches per lead
+  t:                   50              # timepoints per patch
+  # 마스킹
+  mask_type:           block           # block | random
+  mask_scale:          [0.175, 0.225]  # block: [0.175, 0.225] / random: [0.6, 0.7]
+
+# ── 학습 ──────────────────────────────────────────────────────────────────────
+train:
+  epochs:       100
+  # H200 × 8  →  per-GPU 384,  effective 3072
+  # lr 선형 스케일: base_lr(5e-5) × (3072 / 256) = 6e-4
+  batch_size:   96                    # per-GPU
+  lr:           0.00015                  # 선형 스케일 적용값
+  base_lr:      0.00005                   # 참고용 (256 batch 기준)
+  weight_decay: 0.05
+  num_workers:  16
+  # EMA teacher
+  ema_start:    0.996
+  ema_end:      1.0
+  # 스케줄러 (cosine + warmup)
+  warmup_epochs: 5
+  lr_min:        0.000001
+  # 저장
+  save_dir:      null                  # null → ./weights/ecg_jepa_heedb_{timestamp}
+  save_freq:     5                     # N epoch마다 저장
