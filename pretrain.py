@@ -89,6 +89,7 @@ def save_checkpoint(path, raw_model, optimizer, epoch, global_step, best_loss, c
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='configs/pretrain_heedb.yaml')
+    parser.add_argument('--resume', type=str, default=None)
     args, overrides = parser.parse_known_args()
 
     cfg = load_config(args.config)
@@ -196,9 +197,20 @@ def main():
     global_step  = 0
     train_start  = time.time()
 
+    start_epoch = 0
+    if args.resume:
+        from utils import resume_training
+        start_epoch, best_loss = resume_training(
+            path=args.resume,
+            model=raw_model,
+            optimizer=optimizer,
+            device=device,
+        )
+        global_step = start_epoch * iters_per_epoch
+        log(f'Resumed from {args.resume}  (epoch {start_epoch}, global_step {global_step})')
     # ── 전체 epoch tqdm (rank-0만) ────────────────────────────────────────────
     epoch_bar = tqdm(
-        range(cfg.train.epochs),
+        range(start_epoch, cfg.train.epochs),
         desc          = 'Training',
         unit          = 'epoch',
         dynamic_ncols = True,
