@@ -5,7 +5,7 @@
 
 # ── 데이터 ────────────────────────────────────────────────────────────────────
 data:
-  root_dir:      "/home/irteam/opendata1/h5/heedb/v4.0"
+  root_dir:      "/home/irteam/ddn-opendata1/h5/heedb/v4.0"
   csv_path:      null                  # null → root_dir/heedb_table.csv 자동
   max_nan_ratio: 0.1                   # 리드별 nan 비율 허용 상한
   n_leads:       12                    # 12 = 전체 리드 사용

@@ -11,7 +11,7 @@ if [ -z "${1:-}" ]; then
     echo "Usage: bash resume_h200.sh <checkpoint_path>"
     echo ""
     echo "Example:"
-    echo "  bash resume_h200.sh ./weights/ecg_jepa_heedb_20250327_120000/epoch0010.pth"
+    echo "  bash resume_h200.sh ./weights/ecg_jepa_heedb_20260326_203353/epoch0010.pth"
     echo ""
     echo "Available checkpoints:"
     ls ./weights/ecg_jepa_heedb_*/epoch*.pth ./weights/ecg_jepa_heedb_*/best.pth 2>/dev/null || echo "  (none found)"
@@ -28,9 +28,9 @@ fi
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG="configs/pretrain_heedb.yaml"
-N_GPUS=8
+N_GPUS=4
 
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export CUDA_VISIBLE_DEVICES=4,5,6,7
 export PYTHONPATH="${PROJECT_DIR}:${PYTHONPATH:-}"
 
 export NCCL_DEBUG=WARN
