@@ -4,10 +4,10 @@ set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONFIG="configs/pretrain_heedb.yaml"
-N_GPUS=8
+N_GPUS=4
 
 # ── GPU 지정 (0~7번 전체 사용) ───────────────────────────────────────────────
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+export CUDA_VISIBLE_DEVICES=4,5,6,7
 
 # ── PYTHONPATH: 프로젝트 루트 최우선 ─────────────────────────────────────────
 export PYTHONPATH="${PROJECT_DIR}:${PYTHONPATH:-}"
