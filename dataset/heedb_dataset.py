@@ -170,6 +170,11 @@ class HEEDBDataset(Dataset):
         if not np.isfinite(wave).all():
             wave = np.nan_to_num(wave, nan=0.0, posinf=0.0, neginf=0.0)
 
+        # per-lead z-score 정규화
+        mean = wave.mean(axis=1, keepdims=True)       # (12, 1)
+        std  = wave.std(axis=1, keepdims=True) + 1e-6 # (12, 1)
+        wave = (wave - mean) / std
+
         return torch.tensor(wave, dtype=torch.float32)   # (n_leads, 2500)
 
     # ── HDF5 신호 로드 (handle cache 사용) ───────────────────────────────────

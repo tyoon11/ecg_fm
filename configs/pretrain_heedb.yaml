@@ -30,7 +30,7 @@ model:
   t:                   50              # timepoints per patch
   # 마스킹
   mask_type:           block           # block | random
-  mask_scale:          [0.40, 0.60]  # block: [0.175, 0.225] / random: [0.6, 0.7]
+  mask_scale:          [0.175, 0.225]  # block: [0.175, 0.225] / random: [0.6, 0.7]
 
 # ── 학습 ──────────────────────────────────────────────────────────────────────
 train:
@@ -43,8 +43,8 @@ train:
   weight_decay: 0.05
   num_workers:  16
   # EMA teacher
-  ema_start:    0.996
-  ema_end:      1.0
+  ema_start:    0.9998
+  ema_end:      0.9999
   # 스케줄러 (cosine + warmup)
   warmup_epochs: 5
   lr_min:        0.000001
